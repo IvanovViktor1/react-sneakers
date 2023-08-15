@@ -1,0 +1,136 @@
+.overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.7s ease-out, visibility 0.7s ease-out;
+  overflow: hidden;
+}
+.overlayVisible {
+  visibility: visible;
+  opacity: 1;
+
+  .drawer {
+    transform: translateX(0);
+  }
+}
+.drawer {
+  position: absolute;
+  width: 420px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  right: 0;
+  background: #ffffffe2;
+  box-shadow: -10px 4px 24px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  transform: translateX(100%);
+  transition: transform 0.7s ease-in-out;
+
+  .clearCart {
+    opacity: 0.5;
+    cursor: pointer;
+    transition: opacity 0.2s ease-in-out;
+    &:hover {
+      opacity: 1;
+    }
+    text-align: right;
+    margin-bottom: 5px;
+  }
+
+  .items {
+    overflow: auto;
+    flex: 1;
+    margin-bottom: 40px;
+  }
+
+  h2 {
+    margin: 0;
+  }
+
+  .cartTotalBlock {
+    display: block;
+    margin-bottom: 40px;
+    font-size: 18px;
+    li {
+      display: flex;
+      align-items: flex-end;
+      margin-bottom: 20px;
+    }
+    div {
+      flex: 1;
+      height: 1;
+      border-bottom: 1px dashed #dfdfdf;
+      position: relative;
+      top: -4px;
+      margin: 0 10px;
+    }
+    .greenButton {
+      position: relative;
+      &:disabled {
+        background-color: #c8c8c8;
+        cursor: default;
+      }
+      &:hover {
+        img {
+          transform: translateX(8px);
+        }
+      }
+      img {
+        position: absolute;
+        right: 30px;
+        top: 20px;
+        transition: transform 0.2s ease-in-out;
+      }
+    }
+  }
+}
+
+.itemEmpty {
+  width: 350px;
+  height: 390px;
+
+  .greenButton {
+    width: 90%;
+    position: relative;
+    &:disabled {
+      background-color: #c8c8c8;
+      cursor: default;
+    }
+    &:hover {
+      img {
+        transform: rotate(180deg) translateX(8px);
+      }
+    }
+    img {
+      position: absolute;
+      transform: rotate(180deg);
+      left: 30px;
+      top: 20px;
+      transition: transform 0.2s ease-in-out;
+    }
+  }
+}
+
+.greenButton {
+  width: 100%;
+  height: 55px;
+  background: #9dd558;
+  border: 0;
+  border-radius: 18px;
+  color: #ffffff;
+  font-weight: 500;
+  cursor: pointer;
+  transition: margin-right 0.2s ease-in-out;
+  &:hover {
+    opacity: 0.8;
+  }
+  &:active {
+    background: darken($color: #80b342, $amount: 0);
+  }
+}

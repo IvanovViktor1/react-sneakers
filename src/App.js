@@ -1,100 +1,196 @@
-import Card from "./components/Card";
+import React from "react";
+import { Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
+import Orders from "./pages/Orders";
+import Favorites from "./pages/Favorites";
 import Header from "./components/Header";
 import Drawer from "./components/Drawer";
+import Axios from "axios";
+
+export const AppContext = React.createContext();
 
 function App() {
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    async function fetchData() {
+      try {
+        await Axios.get(
+          "https://64c97ea1b2980cec85c247be.mockapi.io/cart"
+        ).then(function (response) {
+          setCartItems(response.data);
+        });
+
+        await Axios.get(
+          "https://64d002c0ffcda80aff525d56.mockapi.io/favorites"
+        ).then(function (response) {
+          setFavorites(response.data);
+        });
+
+        await Axios.get(
+          "https://64c97ea1b2980cec85c247be.mockapi.io/items"
+        ).then(function (response) {
+          setItems(response.data);
+          response.statusText === "OK"
+            ? setIsLoading(false)
+            : setIsLoading(true);
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData();
+  }, []);
+
+  const [items, setItems] = React.useState([]);
+  const [cartItems, setCartItems] = React.useState([]);
+  const [favorites, setFavorites] = React.useState([]);
+  const [searchValue, setSearchValue] = React.useState("");
+  const [cartOpened, setCartOpened] = React.useState(false);
+  const totalPrice = cartItems.reduce((sum, obj) => Number(obj.price) + sum, 0);
+
+  const onRemoveItem = (id) => {
+    try {
+      Axios.delete(`https://64c97ea1b2980cec85c247be.mockapi.io/cart/${id}`);
+      setCartItems((prev) => prev.filter((item) => item.id !== id));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const onUnlikedItem = (id) => {
+    try {
+      Axios.delete(
+        `https://64d002c0ffcda80aff525d56.mockapi.io/favorites/${id}`
+      );
+      setFavorites((prev) => prev.filter((item) => item.id !== id));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const onAddToFavorite = (obj) => {
+    const postToAdd = (obj) => {
+      Axios.post("https://64d002c0ffcda80aff525d56.mockapi.io/favorites", obj)
+        .then(function (response) {
+          console.log(response.statusText);
+          response.statusText === "Created" &&
+            Axios.get(
+              "https://64d002c0ffcda80aff525d56.mockapi.io/favorites"
+            ).then(function (response) {
+              setFavorites(response.data);
+            });
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    };
+    const checkIncludes = (obj) => {
+      favorites.find((item) => item.sku === obj.sku) === undefined
+        ? postToAdd(obj)
+        : onUnlikedItem(favorites.find((item) => item.sku === obj.sku).id);
+    };
+    checkIncludes(obj);
+  };
+
+  const onAddToCart = (obj) => {
+    const postToAdd = (obj) => {
+      Axios.post("https://64c97ea1b2980cec85c247be.mockapi.io/cart", obj)
+        .then(function (response) {
+          response.statusText === "Created" &&
+            Axios.get("https://64c97ea1b2980cec85c247be.mockapi.io/cart").then(
+              function (response) {
+                setCartItems(response.data);
+              }
+            );
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    };
+
+    const checkIncludes = (obj) => {
+      cartItems.find((item) => item.sku === obj.sku) === undefined
+        ? postToAdd(obj)
+        : onRemoveItem(cartItems.find((item) => item.sku === obj.sku).id);
+    };
+    checkIncludes(obj);
+  };
+
+  const onChangeSearshInput = (event) => {
+    console.log(event.target.value);
+    setSearchValue(event.target.value);
+  };
+
   return (
-    <div className="wrapper clear">
-      <Drawer />
-      <Header />
-      <div className="content p-30">
-        <div className="d-flex align-center justify-between mb-40">
-          <h1>Все кроссовки</h1>
-          <div className="search-block d-flex">
-            <img src="/img/Search.svg" alt="Search" />
-            <input type="text" placeholder="Поиск..." />
-          </div>
-        </div>
+    <AppContext.Provider
+      value={{
+        isLoading,
+        setIsLoading,
+        items,
+        setItems,
+        cartItems,
+        setCartItems,
+        favorites,
+        setFavorites,
+        searchValue,
+        setSearchValue,
+        cartOpened,
+        setCartOpened,
+        totalPrice,
+      }}
+    >
+      <div className="wrapper clear">
+        <Drawer
+          onClose={() => setCartOpened(false)}
+          onRemove={onRemoveItem}
+          onRemoveAll={"onRemoveItemsAll"}
+          opened={cartOpened}
+        />
+        <Header onClickCart={() => setCartOpened(true)} />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Home
+                onAddToFavorite={onAddToFavorite}
+                onAddToCart={onAddToCart}
+                onChangeSearshInput={onChangeSearshInput}
+              />
+            }
+            exact
+          />
+        </Routes>
 
-        <div className="d-flex">
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          {/* <div className="card">
-            <div className="favorite">
-              <img src="/img/Liked.svg" alt="Liked" />
-            </div>
+        <Routes>
+          <Route
+            path="/favorites"
+            element={
+              <Favorites
+                onAddToFavorite={onAddToFavorite}
+                onAddToCart={onAddToCart}
+                onChangeSearshInput={onChangeSearshInput}
+              />
+            }
+            exact
+          />
+        </Routes>
 
-            <img
-              width={133}
-              height={112}
-              src="/img/sneakers/1.jpg"
-              alt="Sneakers"
-            />
-            <h5>Мужские кроссовки New Balance 2002R</h5>
-            <div className="d-flex justify-between align-center">
-              <div className="d-flex flex-column">
-                <span>Цена:</span>
-                <b>12 999 руб.</b>
-              </div>
-
-              <div className="add">
-                <img src="/img/btn-checked.svg" alt="Unchecked" />
-              </div>
-            </div>
-          </div>
-
-          <div className="card">
-            <div className="favorite">
-              <img src="/img/Liked.svg" alt="Liked" />
-            </div>
-
-            <img
-              width={133}
-              height={112}
-              src="/img/sneakers/1.jpg"
-              alt="Sneakers"
-            />
-            <h5>Мужские кроссовки New Balance 2002R</h5>
-            <div className="d-flex justify-between align-center">
-              <div className="d-flex flex-column">
-                <span>Цена:</span>
-                <b>12 999 руб.</b>
-              </div>
-
-              <div className="add">
-                <img src="/img/btn-checked.svg" alt="Unchecked" />
-              </div>
-            </div>
-          </div>
-
-          <div className="card">
-            <div className="favorite">
-              <img src="/img/Liked.svg" alt="Liked" />
-            </div>
-
-            <img
-              width={133}
-              height={112}
-              src="/img/sneakers/1.jpg"
-              alt="Sneakers"
-            />
-            <h5>Мужские кроссовки New Balance 2002R</h5>
-            <div className="d-flex justify-between align-center">
-              <div className="d-flex flex-column">
-                <span>Цена:</span>
-                <b>12 999 руб.</b>
-              </div>
-
-              <div className="add">
-                <img src="/img/btn-checked.svg" alt="Unchecked" />
-              </div>
-            </div>
-          </div> */}
-        </div>
+        <Routes>
+          <Route
+            path="/orders"
+            element={
+              <Orders
+                onAddToFavorite={onAddToFavorite}
+                onAddToCart={onAddToCart}
+                onChangeSearshInput={onChangeSearshInput}
+              />
+            }
+            exact
+          />
+        </Routes>
       </div>
-    </div>
+    </AppContext.Provider>
   );
 }
 

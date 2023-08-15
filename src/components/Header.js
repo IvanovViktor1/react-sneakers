@@ -1,22 +1,30 @@
-function Header() {
+import React from "react";
+import { Link } from "react-router-dom";
+import { useCart } from "../hooks/useCart";
+
+function Header(props) {
+  const { totalPrice } = useCart();
+
   return (
     <header className="d-flex justify-between align-center p-30">
-      <div className="d-flex align-center">
-        <img
-          className="mr-5"
-          width={40}
-          height={40}
-          src="/img/logo-sneakers.png"
-          alt=""
-        />
-        <div>
-          <h3 className="text-uppercase">React Sneakers</h3>
-          <p className="opacity-5">Магазин лучших кроссовок</p>
+      <Link to="/">
+        <div className="d-flex align-center">
+          <img
+            className="mr-5"
+            width={40}
+            height={40}
+            src="/img/logo-sneakers.png"
+            alt=""
+          />
+          <div>
+            <h3 className="text-uppercase">React Sneakers</h3>
+            <p className="opacity-5">Магазин лучших кроссовок</p>
+          </div>
         </div>
-      </div>
+      </Link>
 
       <ul className="d-flex">
-        <li className="mr-30">
+        <li className="mr-30 cu-p" onClick={props.onClickCart}>
           <svg
             className="mr-5"
             xmlns="http://www.w3.org/2000/svg"
@@ -31,23 +39,27 @@ function Header() {
               fill="gray"
             />
           </svg>
-          <span>1205 руб.</span>
+          <span>{totalPrice} руб.</span>
         </li>
         <li>
-          <svg
-            className="mr-10"
-            xmlns="http://www.w3.org/2000/svg"
-            id="Layer_1"
-            data-name="Layer 1"
-            viewBox="0 0 24 24"
-            width="20"
-            height="20"
-          >
-            <path
-              d="m12,0C5.383,0,0,5.383,0,12s5.383,12,12,12,12-5.383,12-12S18.617,0,12,0Zm-4,21.164v-.164c0-2.206,1.794-4,4-4s4,1.794,4,4v.164c-1.226.537-2.578.836-4,.836s-2.774-.299-4-.836Zm9.925-1.113c-.456-2.859-2.939-5.051-5.925-5.051s-5.468,2.192-5.925,5.051c-2.47-1.823-4.075-4.753-4.075-8.051C2,6.486,6.486,2,12,2s10,4.486,10,10c0,3.298-1.605,6.228-4.075,8.051Zm-5.925-15.051c-2.206,0-4,1.794-4,4s1.794,4,4,4,4-1.794,4-4-1.794-4-4-4Zm0,6c-1.103,0-2-.897-2-2s.897-2,2-2,2,.897,2,2-.897,2-2,2Z"
-              fill="gray"
-            />
-          </svg>
+          <Link to="/favorites">
+            <img
+              className="mr-20 cu-p"
+              onClick={props.onClickFavorites}
+              src="/img/heart.svg"
+              alt="heart"
+            ></img>
+          </Link>
+        </li>
+        <li>
+          <Link to="/orders">
+            <img
+              className="mr-20 cu-p"
+              onClick={props.onClickOrders}
+              src="/img/account.svg"
+              alt="heart"
+            ></img>
+          </Link>
         </li>
       </ul>
     </header>
