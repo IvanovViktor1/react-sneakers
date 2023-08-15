@@ -96,7 +96,7 @@ header {
     img {
       position: absolute;
       transform: rotate(180deg);
-      left: 30px;
+      left: 30px !important;
       top: 20px;
       transition: transform 0.2s ease-in-out;
     }

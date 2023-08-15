@@ -34,7 +34,7 @@ function Home({ onAddToFavorite, onAddToCart, onChangeSearshInput }) {
           {searchValue ? `Поиск по запросу: ${searchValue}` : "Все кроссовки"}
         </h1>
         <div className="search-block d-flex">
-          <img src="/img/Search.svg" alt="Search" />
+          <img src="img/Search.svg" alt="Search" />
           <input
             onChange={onChangeSearshInput}
             value={searchValue}
@@ -45,7 +45,7 @@ function Home({ onAddToFavorite, onAddToCart, onChangeSearshInput }) {
             <img
               onClick={() => setSearchValue("")}
               className="btn-close"
-              src="/img/btn-close.svg"
+              src="img/btn-close.svg"
               alt="Clear"
             />
           )}

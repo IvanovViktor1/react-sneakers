@@ -59,7 +59,7 @@ function Orders() {
         <Info
           title={"У вас нет заказов"}
           description={"Оформите хотя бы один заказ."}
-          image={"/img/no-orders.jpg"}
+          image={"img/no-orders.jpg"}
         />
       </div>
     );

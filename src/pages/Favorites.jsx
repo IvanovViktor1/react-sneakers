@@ -32,7 +32,7 @@ function Favorites({ onAddToFavorite, onAddToCart, onChangeSearshInput }) {
         <Info
           title={"У вас нет избранных товаров"}
           description={"Добавьте понравившийся товар"}
-          image={"/img/no-favorites.jpg"}
+          image={"img/no-favorites.jpg"}
         />
       </div>
     );
@@ -44,7 +44,7 @@ function Favorites({ onAddToFavorite, onAddToCart, onChangeSearshInput }) {
           {searchValue ? `Поиск по запросу: ${searchValue}` : "Все кроссовки"}
         </h1>
         <div className="search-block d-flex">
-          <img src="/img/Search.svg" alt="Search" />
+          <img src="img/Search.svg" alt="Search" />
           <input
             onChange={onChangeSearshInput}
             value={searchValue}
@@ -55,7 +55,7 @@ function Favorites({ onAddToFavorite, onAddToCart, onChangeSearshInput }) {
             <img
               onClick={() => setSearchValue("")}
               className="btn-close"
-              src="/img/btn-close.svg"
+              src="img/btn-close.svg"
               alt="Clear"
             />
           )}

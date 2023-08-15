@@ -37,8 +37,8 @@ function Card({ title, imageUrl, price, sku, onFavorite, onPlus }) {
             <img
               src={
                 favorites.find((item) => item.sku === sku) === undefined
-                  ? "/img/Unliked.svg"
-                  : "/img/Liked.svg"
+                  ? "img/Unliked.svg"
+                  : "img/Liked.svg"
               }
               alt="Unliked"
             />
@@ -56,8 +56,8 @@ function Card({ title, imageUrl, price, sku, onFavorite, onPlus }) {
               onClick={onClickPlus}
               src={
                 cartItems.find((item) => item.sku === sku) === undefined
-                  ? "/img/Plus.svg"
-                  : "/img/btn-checked.svg"
+                  ? "img/Plus.svg"
+                  : "img/btn-checked.svg"
               }
               alt="Plus"
             />

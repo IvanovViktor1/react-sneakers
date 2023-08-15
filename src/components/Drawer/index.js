@@ -3,11 +3,13 @@ import styles from "./Drawer.module.scss";
 import Info from "../Info";
 import Axios from "axios";
 import { useCart } from "../../hooks/useCart";
+import { AppContext } from "../../App";
 
 function Drawer({ onClose, onRemove, onRemoveAll, opened }) {
   const { cartItems, setCartItems, totalPrice, deleteCartItems } = useCart();
   const [isLoading, setIsLoading] = React.useState(false);
-  const [isOrderCompleted, setIsOrderCompleted] = React.useState(false);
+  const { isOrderCompleted, setIsOrderCompleted } =
+    React.useContext(AppContext);
   const [orderId, setOrderId] = React.useState(null);
 
   const onClickOrder = async () => {
@@ -36,7 +38,7 @@ function Drawer({ onClose, onRemove, onRemoveAll, opened }) {
           <img
             onClick={onClose}
             className="removeBtn"
-            src="/img/btn-remove.svg"
+            src="img/btn-remove.svg"
             alt="Remove"
           />
         </div>
@@ -65,7 +67,7 @@ function Drawer({ onClose, onRemove, onRemoveAll, opened }) {
                     <p className="sku">{item.sku}</p>
                     <img
                       className="removeBtn"
-                      src="/img/btn-remove.svg"
+                      src="img/btn-remove.svg"
                       alt="Remove"
                       onClick={() => onRemove(item.id)}
                     />
@@ -93,22 +95,26 @@ function Drawer({ onClose, onRemove, onRemoveAll, opened }) {
                 className="greenButton"
               >
                 Оформить заказ
-                <img src="/img/Arrow.svg" alt="Arrow" />
+                <img src="img/Arrow.svg" alt="Arrow" />
               </button>
             </div>
           </div>
         ) : (
           <Info
-            title={isOrderCompleted ? "Заказ оформлен" : "Корзина пустая"}
+            title={
+              isOrderCompleted
+                ? `Заказ № ${orderId} оформлен`
+                : "Корзина пустая"
+            }
             description={
               isOrderCompleted
-                ? `Ваш заказ # ${orderId} скоро будет передан курьерской доставке`
+                ? "Ваш заказ скоро будет передан курьерской доставке"
                 : "Добавьте хотя бы пару кроссовок, чтобы сделать заказ"
             }
             image={
               isOrderCompleted
-                ? "/img/order-completed.png"
-                : "/img/empty-cart.jpg"
+                ? "img/order-completed.png"
+                : "img/empty-cart.jpg"
             }
           />
         )}

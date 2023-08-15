@@ -47,6 +47,7 @@ function App() {
   const [favorites, setFavorites] = React.useState([]);
   const [searchValue, setSearchValue] = React.useState("");
   const [cartOpened, setCartOpened] = React.useState(false);
+  const [isOrderCompleted, setIsOrderCompleted] = React.useState(false);
   const totalPrice = cartItems.reduce((sum, obj) => Number(obj.price) + sum, 0);
 
   const onRemoveItem = (id) => {
@@ -138,6 +139,8 @@ function App() {
         cartOpened,
         setCartOpened,
         totalPrice,
+        isOrderCompleted,
+        setIsOrderCompleted,
       }}
     >
       <div className="wrapper clear">
@@ -150,7 +153,7 @@ function App() {
         <Header onClickCart={() => setCartOpened(true)} />
         <Routes>
           <Route
-            path="/"
+            path="react-sneakers/"
             element={
               <Home
                 onAddToFavorite={onAddToFavorite}
@@ -164,7 +167,7 @@ function App() {
 
         <Routes>
           <Route
-            path="/favorites"
+            path="react-sneakers/favorites"
             element={
               <Favorites
                 onAddToFavorite={onAddToFavorite}
@@ -178,7 +181,7 @@ function App() {
 
         <Routes>
           <Route
-            path="/orders"
+            path="react-sneakers/orders"
             element={
               <Orders
                 onAddToFavorite={onAddToFavorite}
